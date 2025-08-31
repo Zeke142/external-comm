@@ -23,3 +23,7 @@ Copy/paste the published message into `/comm/logs/_index.md`:
 - Channel  
 - Text (full, not summary)  
 - Link (if applicable)  
+
+
+## Draft
+Testing the External Communication Module—first test!
