@@ -55,16 +55,12 @@ def gh(method: str, url: str, json_body=None):
     return r.json()
 
 def read_draft_text(md: str) -> str:
-    """
-    Grab everything under '## Draft' or '# Draft' until the next header.
-    Fallback: first non-empty paragraph if no header found.
-    """
+    # capture under 'Draft' header; fallback = first non-empty paragraph
     m = re.search(r"^#{1,3}\s*Draft\s*\n([\s\S]*?)(?:\n#{1,3}\s|\Z)", md, flags=re.M)
     if m:
         text = m.group(1).strip()
         if text:
             return text
-    # Fallback: first non-empty paragraph
     for block in md.split("\n\n"):
         b = block.strip()
         if b and not b.lower().startswith("# external communication module"):
@@ -84,16 +80,12 @@ def get_discussion_category_id(owner: str, repo: str, name: str):
 
 def create_discussion(owner: str, repo: str, title: str, body: str, cat_id: int):
     return gh("POST", f"{API}/repos/{owner}/{repo}/discussions", {
-        "title": title,
-        "body": body,
-        "category_id": cat_id
+        "title": title, "body": body, "category_id": cat_id
     })
 
 def create_issue(owner: str, repo: str, title: str, body: str, labels):
     return gh("POST", f"{API}/repos/{owner}/{repo}/issues", {
-        "title": title,
-        "body": body,
-        "labels": labels
+        "title": title, "body": body, "labels": labels
     })
 
 def append_log(path: pathlib.Path, channel: str, url: str, text: str):
@@ -128,9 +120,6 @@ def main():
     body = read_draft_text(SRC_FILE.read_text(encoding="utf-8"))
     title = first_line_title(body)
 
-    published_url = None
-    channel = None
-
     if MODE == "discussion":
         cat_id = get_discussion_category_id(owner, repo, CATEGORY)
         if cat_id:
@@ -138,7 +127,6 @@ def main():
             published_url = res.get("html_url")
             channel = f"GitHub Discussion ({CATEGORY})"
         else:
-            # Fallback to Issue
             res = create_issue(owner, repo, title, body, ISSUE_LABELS)
             published_url = res.get("html_url")
             channel = "GitHub Issue (fallback)"
