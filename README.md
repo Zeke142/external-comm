@@ -1,2 +1,9 @@
-# external-comm
-“External Communication Module — a plug-and-play publisher that drafts, pushes, and logs outward messages (Draft → Publish → Log).”
+# 🛰️ External Communication Module
+
+**Purpose**  
+A plug-and-play publisher that manages outbound communication in three steps:  
+**Draft → Publish → Log.**
+
+---
+
+## 📂 Structure
