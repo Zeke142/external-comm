@@ -1,0 +1,20 @@
+project: External Communication Module
+version: 1.0.0
+root: comm/
+
+files:
+  instructions: instructions.md
+  system: system_files.md
+  draft: direct_drop.md
+  log: logs/_index.md
+
+bridges:
+  github:
+    file: bridges/github_bridge.md
+    mode: discussion   # default = Discussion
+    fallback: issue    # fallback = Issue if Discussions disabled
+
+workflow:
+  - draft
+  - publish
+  - log
