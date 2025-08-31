@@ -1,0 +1,41 @@
+name: Comm Bridge (GitHub)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'comm/direct_drop.md'
+      - 'comm/bridge.config.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      discussions: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: python -m pip install requests
+
+      - name: Publish to GitHub + append log
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: python comm/publish_to_github.py
+
+      - name: Commit updated log
+        run: |
+          if [[ -n "$(git status --porcelain comm/logs/_index.md)" ]]; then
+            git config user.name "comm-bridge-bot"
+            git config user.email "comm-bridge-bot@users.noreply.github.com"
+            git add comm/logs/_index.md
+            git commit -m "chore(comm): append external comm log"
+            git push
+          fi
